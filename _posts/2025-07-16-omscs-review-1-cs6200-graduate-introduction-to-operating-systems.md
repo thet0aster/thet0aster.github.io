@@ -72,7 +72,7 @@ In this project we convert our web server into a proxy server (Part 1) that tran
 
 This project delved into the intricaces of Linux IPC, including mechanisms such as shared memory and message queues. I decided to use POSIX message queues instead of the older System V queues just because the API seemed a bit more straightforward. This project also dealt with low level synchronization primitives such as semaphores.
 
-Personally, I found this project harder than Project 1. Slack was my best friend for this project, as students posted diagrams and control-flow graphs that provided a clearer understanding of what needed to be done. I often ran into deadlocks attempting to implement a version of the reader/writer problem using semaphores, and it took me a painstakingly long time to figure out why as there wasn't really a solid way to debug the issue. But I ended up figuring it out and passing all the GradeScope tests
+Personally, I found this project harder than Project 1. Slack was my best friend for this project, as students posted diagrams and control-flow graphs that provided a clearer understanding of what needed to be done. I often ran into deadlocks attempting to implement a version of the reader/writer problem using semaphores, and it took me a painstakingly long time to figure out why as there wasn't really a solid way to debug the issue. But I ended up figuring it out and passing all the GradeScope tests.
 
 **My final grade: 100%**
 
@@ -81,6 +81,45 @@ Personally, I found this project harder than Project 1. Slack was my best friend
 This final project was in C++ rather than C, and it had us implementing an RPC protocol service that will fetch, store, list, and get attributes for files on a remote server using gRPC and protobufs. In Part 2, we flesh out our previous RPC implementations into a full-blown rudimentary distributed file system (DFS), where we need to ensure consistency among all nodes in the file system and implement whole-file caching and a simple lock strategy on the server-side to manage client writes.
 
 Many people say that this is the easiest project, and comparitively speaking I reluctantly agree. But that is not to say this project is "easy" by any stretch of the imagination. It still requires a decent amount of time to complete. Further, the project's complexity is increased by the fact that a large portion of my time was just spent sifting through the boilerplate code that was provided for this part to understand how it works and what exactly I needed to add, which isn't necessarily clear on the first glance. There ended up being extra credit tests on GradeScope for this part involving synchronization between multiple clients, and it isn't really clear on GradeScope which tests are extra credit and which aren't. 
+
+To simplify testing, I used this bash script that I wrote that will check all the nodes of the DFS to ensure their view of the files are consistent:
+
+```bash
+#!/bin/bash
+dirs=(/tmp/server/ /tmp/client1 /tmp/client2 /tmp/client3 /tmp/client4 /tmp/client5);
+for ((i=0; i<${#dirs[@]}-1; i++)); do
+  dir1="${dirs[i]}"
+  dir2="${dirs[i+1]}"
+  echo "=== Comparing $dir1 vs $dir2 ==="
+
+  # Step 1: Show content differences
+  diff -rq "$dir1" "$dir2"
+
+  # Step 2: Check identical files for mtime mismatch
+  comm_files=$(comm -12 \
+    <(find "$dir1" -type f | sed "s|^$dir1/||" | sort) \
+    <(find "$dir2" -type f | sed "s|^$dir2/||" | sort))
+
+  if [[ -n "$comm_files" ]]; then
+    while IFS= read -r file; do
+      file1="$dir1/$file"
+      file2="$dir2/$file"
+
+      # Confirm both are regular files (avoid directory cmp errors)
+      if [[ -f "$file1" && -f "$file2" ]] && cmp -s "$file1" "$file2"; then
+        mtime1=$(stat -c %Y "$file1")
+        mtime2=$(stat -c %Y "$file2")
+
+        if [ "$mtime1" -ne "$mtime2" ]; then
+          echo "⚠ $file: same contents, DIFFERENT mtime"
+        fi
+      fi
+    done <<< "$comm_files"
+  fi
+
+  echo
+done
+```
 
 **Final score: 110%**
 

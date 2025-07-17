@@ -59,7 +59,35 @@ Given that the author already provides an explanation on how to get this flag, I
 
 In the exercise at the end of the chapter, we are instructed to pass the previous flag to the **oracle** program provided in the code files or VM on the [website][def] to unlock a new CTF challenge. When we pass the flag to the ```oracle``` program, we see that it unlocks the **lvl2** binary, and provides us the following hint.
 
-![GUESSME](/assets/img/lvl2_1.png)
+![lvl2](/assets/img/lvl2_1.png)
 
+Running the **lvl2** binary gives us a strange hexadecimal byte printed out to stdout. What's stranger is that it appears to change at regular intervals. To confirm this, we can run the command ```watch -n 1 ./lvl2```, which shows the output changing at a regular interval every second. This is indicative that the program is using pseudorandom number generation and seeding with the system time. To confirm this, lets run ```ltrace``` on our **lvl2** binary:
+
+![rand](/assets/img/lvl2_2.png)
+
+As we suspected, the program make a call to ```time(0)```, ```srand()```, and finally ```rand()``` before the ```puts()``` call which prints out our byte. In order to figure out where this byte comes from, we need to introspect this code further. Lets use ```objdump``` and see what happens near that ```puts()``` call.
+
+![rand](/assets/img/lvl2_3.png)
+
+Luckily for us, the code we need to examine is right at the start of the ```.text``` section and we don't need to dig very far at all. The ```puts()``` call is at address ```0x40052c```, and we can see the argument it uses is an offset from the address ```0x601060```. After the ```puts()``` call, the value of ```rax``` is cleared with the ```xor``` instruction 
+
+>For historical compatibility reasons on x86-64, any operation that occurs on the lower 32 bits of a register will be zero-extended to the upper 32 bits, so even though the operation is only on the lower dword, it will clear the entire ```rax``` register
+{: .prompt-info}
+
+```rax``` initially stores the return value of ```rand()```, and the lower byte of this value is masked and used as an index to the data stored at ```0x601060```, which appears to be an array of 8-byte values, likely C-string pointers. The compiler generates a bit-twiddling block to deal with signed results using ```ctld``` and a ```shr``` instruction, but these are irrelevant for our purposes since ```rand``` will never return a negative number. 
+
+So lets review our assumptions so far: we are assuming that the address ```0x601060``` is an array of string pointers that **lvl2** indexes into randomly and prints out a single byte from. Printing out the ```.data``` section, we see the following
+
+![array of string pointer](/assets/img/lvl2_4.png)
+
+Those certainly look like pointers to me. Each pointer seems to be referencing the same memory region at increments of 3 bytes (which would account for the string representation of a hex byte which comprises of 2 character bytes and a null terminator). Accounting for the fact that we are dealing with little-endian encoded addresses, we can once again find their references in the ```.rodata``` section of the binary
+
+![array of string pointer](/assets/img/lvl2_5.png)
+
+This certainly looks like like some interesting data. It is 32 characters in total, which is the same length as a flag. Maybe if we concatenate them in order as hinted by the oracle initially, we get a valid flag.
+
+![lvl2 flag](/assets/img/lvl2_6.png)
+
+Success! The flag is <blur>034fc4f6a536f2bf74f8d6d3816cdf88</blur>
 
 [def]: https://practicalbinaryanalysis.com

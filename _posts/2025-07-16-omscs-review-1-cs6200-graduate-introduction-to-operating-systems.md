@@ -6,7 +6,7 @@ categories: [OMSCS, Class Reviews]
 tags: [OMSCS, GIOS, Gatech]
 image:
     path: https://cloudfront-us-east-1.images.arcpublishing.com/ajc/CPLKGQDZU3MT46H6NGLNYEEIMU.jpg
-    alt: Image from [GT](https://cloudfront-us-east-1.images.arcpublishing.com/ajc/CPLKGQDZU3MT46H6NGLNYEEIMU.jpg)
+    alt: Georgia Institute of Technology
 ---
 
 To kick off my OMSCS journey in the Spring 2025 semester, I decided to start with Graduate Introduction to Operating Systems

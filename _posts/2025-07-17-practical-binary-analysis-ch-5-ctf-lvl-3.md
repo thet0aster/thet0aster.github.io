@@ -9,10 +9,10 @@ image:
     alt: Practical Binary Analysis
 ---
 
-This post is my writeup detailing the solution to the Level 3 CTF challenge in the book [Practical Binary Analysis][def]. The previous writeup detailing the Level 1 and Level 2 flags can be found [here](/posts/_posts/2025-07-17-practical-binary-analysis-ch-5-ctf-lvl-1.md).
+This post is my writeup detailing the solution to the Level 3 CTF challenge in the book [Practical Binary Analysis][def]. The previous writeup detailing the Level 1 and Level 2 flags can be found [here]({% post_url 2025-07-17-practical-binary-analysis-ch-5-ctf-lvl-1 %}).
 
 ## <span style="color:red">Third Flag: lvl3</span>
-At this point, if you are following along, you should have captured the **lvl2** flag from the [previous writeup](/posts/_posts/2025-07-17-practical-binary-analysis-ch-5-ctf-lvl-1.md), which is <blur>034fc4f6a536f2bf74f8d6d3816cdf88</blur>. Throwing this at the oracle gives us a hint as to what to look for
+At this point, if you are following along, you should have captured the **lvl2** flag from the previous writeup, which is <blur>034fc4f6a536f2bf74f8d6d3816cdf88</blur>. Throwing this at the oracle gives us a hint as to what to look for
 
 ![lvl3 hint](/assets/img/lvl3_1.png)
 

@@ -24,6 +24,7 @@ The grading scale for the Spring 2025 semester was as follows:
 - **Project 4**: 15%
 - **Midterm**: 25%
 - **Final**: 25%
+- **Participation**: 5%
 
 Notice how we skipped Project 2? Apparently it used to be offered in earlier iterations of the class as an extra credit assignment, but it seems like they removed it now. They still kept the project names the same just by convention, though.
 

@@ -76,7 +76,7 @@ Luckily for us, the code we need to examine is right at the start of the ```.tex
 
 ```rax``` initially stores the return value of ```rand()```, and the lower byte of this value is masked and used as an index to the data stored at ```0x601060```, which appears to be an array of 8-byte values, likely C-string pointers. The compiler generates a bit-twiddling block to deal with signed results using ```ctld``` and a ```shr``` instruction, but these are irrelevant for our purposes since ```rand``` will never return a negative number. 
 
-So lets review our assumptions so far: we are assuming that the address ```0x601060``` is an array of string pointers that **lvl2** indexes into randomly and prints out a single byte from. Printing out the ```.data``` section, we see the following
+So lets review our assumptions so far: we are assuming that the address ```0x601060``` is an array of string pointers that **lvl2** indexes into randomly and prints out a 2 character string from. Printing out the ```.data``` section, we see the following
 
 ![array of string pointer](/assets/img/lvl2_4.png)
 

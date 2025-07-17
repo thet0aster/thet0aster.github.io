@@ -4,6 +4,9 @@ title: 'OMSCS Review #1: CS6200 Graduate Introduction to Operating Systems'
 date: 2025-07-16 22:03 -0400
 categories: [OMSCS, Class Reviews]
 tags: [OMSCS, GIOS, Gatech]
+image:
+    path: https://cloudfront-us-east-1.images.arcpublishing.com/ajc/CPLKGQDZU3MT46H6NGLNYEEIMU.jpg
+    alt: Image from [GT](https://cloudfront-us-east-1.images.arcpublishing.com/ajc/CPLKGQDZU3MT46H6NGLNYEEIMU.jpg)
 ---
 
 To kick off my OMSCS journey in the Spring 2025 semester, I decided to start with Graduate Introduction to Operating Systems

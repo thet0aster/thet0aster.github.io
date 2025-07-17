@@ -16,7 +16,7 @@ The author provides a virtual machine along with the example code for every chap
 As likely intended by the author, these solutions will not be using any advanced static analysis tools like IDA Pro or Ghidra, and will mainly only rely on simple tools such as gdb, readelf, nm, ltrace and strace, objdump, and a hex editor of choice. 
 
 ## <span style="color:red">Initial Flag: lvl1</span>
-The initial flag the author derives in Chapter 5 is **84b34c124b2ba5ca224af8e33b077e9e**. We can get this flag by examining the files we are provided for the exercise.
+The initial flag the author derives in Chapter 5 is <blur>84b34c124b2ba5ca224af8e33b077e9e</blur>. We can get this flag by examining the files we are provided for the exercise.
 
 ![File Type](/assets/img/lvl0_1.png)
 

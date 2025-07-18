@@ -39,7 +39,7 @@ This appears to take us to an address within our executable ```.text```, but if 
 
 Huh? I'm sure I used the correct sequence, <blur>2e29c64a0f03a6ee2a307fecc8c3ff42</blur>, why didn't it work? Well, I ended up spending way too much time on trying to figure out what the correct flag is when eventually I realized I had it correct all along, the **oracle** program was just broken
 
-It appears the **oracle** binary pre-installed on the VM under /home/binary/code/chapter5 had a bug in it somewhere that doesn't accept the coprrect flag. Perhaps it is an earlier version of the binary that they forgot to update. In any case, I downloaded the code archive from the website and ran the same command on the **oracle** packaged within and it accepted the flag:
+It appears the **oracle** binary pre-installed on the VM under /home/binary/code/chapter5 had a bug in it somewhere that doesn't accept the correct flag. Perhaps it is an earlier version of the binary that they forgot to update. In any case, I downloaded the code archive from the website and ran the same command on the **oracle** packaged within and it accepted the flag:
 
 ![lvl6 init](/assets/img/lvl6_7.png)
 

@@ -3,7 +3,7 @@ layout: post
 title: 'Practical Binary Analysis Ch. 5 CTF: Lvl 5'
 date: 2025-07-17 19:04 -0400
 categories: [CTF, Practical Binary Analysis]
-tags: [ctf, elf, binary, ltrace]
+tags: [ctf, elf, binary, objdump]
 image:
     path: /assets/img/pba.png
     alt: Practical Binary Analysis

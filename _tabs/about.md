@@ -6,8 +6,8 @@ order: 4
 
 <img alt="alt text" src="/assets/img/about/picture_one.JPG" alt="About Me Photo" style="width:300px; height:auto;">
 
-Hi! I'm <span style="color:red">**thet0aster**</span>, I am a vulnerability
-researcher and a current computer science masters student enrolled through
+Hi! I'm <span style="color:red">**thet0aster**</span>, a.k.a Kishore. I am a vulnerability
+researcher and a current computer science grad student enrolled in
 Georgia Tech's OMSCS program. My interests mainly lie in offensive security
 research, binary exploitation, reverse engineering, and malware analysis to
 name a few...those sorts of things. But I am deeply passionate about game

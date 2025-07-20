@@ -23,7 +23,7 @@ The ```PT_INTERP``` segment, which contains the ```.interp``` section, simply ho
 ## <span style="color:red">Overview of Dynamic Loading</span>
 Let's look at an overview of what happens when you run a new executable in a Unix shell. When you run ```./a.out```, the shell calls ```fork()```, which is a syscall that clones the shell process itself. Then, the cloned child process will call the ```execve()``` syscall with the ELF file to transfer control to the kernel to overwrite its segments with the new binary's data.
 
-#### <span style="color:red">Step 1: Kernel Creates a Process</span>
+#### <span style="color:lightcoral">Step 1: Kernel Creates a Process</span>
 The kernel gains control, creates a new child process cloning the shell, and begins the initial process of loading the executable into the virtual address space of the child process. First, it reads the executable header to ensure that it is a valid ELF binary by checking the magic bytes ```\7fELF```. It also checks the other metadata in the executable header, such as the endianness, the address size, and the ELF type.
 
 Using the ```e_phoff``` field, it finds the Program Header Table and begins reading the program headers.
@@ -31,7 +31,7 @@ Using the ```e_phoff``` field, it finds the Program Header Table and begins read
 > Note: As mentioned in Part 1, the section header table is completely disregarded at this point. Only program headers matter during loading/execution. 
 {: .prompt-info}
 
-#### <span style="color:red">Step 2: Kernel Loads Segments into Memory</span>
+#### <span style="color:lightcoral">Step 2: Kernel Loads Segments into Memory</span>
 
 The kernel then walks the PHT, searching for ```PT_LOAD``` segments. Once it finds them it will:
 
@@ -42,11 +42,11 @@ The kernel then walks the PHT, searching for ```PT_LOAD``` segments. Once it fin
 > As we can see, it is the kernel, NOT the interpreter that initially loads the ```PT_LOAD``` segments of the executable into memory. The interpreter only maps the ```PT_LOAD``` segments of shared libraries into the program, not the ```PT_LOAD``` segments of the program itself. 
 {: .prompt-tip}
 
-#### <span style="color:red">Step 3: Kernel Calls the Interpreter</span>
+#### <span style="color:lightcoral">Step 3: Kernel Calls the Interpreter</span>
 
 The kernel then searches the PHT for the ```PT_INTERP``` type to find the path to the dynamic linker. If it exists, the kernel will ```mmap()``` the dynamic linker directly as another ELF executable in the process's virtual memory, repeating the above step. Then, it will jump to the entry point of the dynamic linker, **not the original binary's entry point yet!**
 
-#### <span style="color:red">Step 4: Dynamic Linker Takes Control and Loads Dependencies</span>
+#### <span style="color:lightcoral">Step 4: Dynamic Linker Takes Control and Loads Dependencies</span>
 
 Once the kernel jumps to the dynamic linker's entry point, it begins to perform its task of dynamic linking and loading. The first place it will go is to the PHT to find the ```PT_DYNAMIC``` segment.
 
@@ -57,7 +57,7 @@ If you recall from part 1, ```PT_DYNAMIC``` stores the ```.dynamic``` section, w
 
 Anything that the dynamic linker needs to find in order to perform dynamic linking, it can find within this segment. It first begins by looking for ```DT_NEEDED``` segments to find the shared libraries that this executable has dependencies for, and it will begin the process of ```mmap()```ing their ```PT_LOAD``` segments into the executable's virtual address space using ELF loading rules. It will do this by recursively processing the ```PT_DYNAMIC``` segments of the **shared libraries** for every ```DT_NEEDED``` dependency it can find in the current ELF executable's ```PT_DYNAMIC``` segment.
 
-#### <span style="color:red">Step 5: Dynamic Linker Performs Initial Relocations</span>
+#### <span style="color:lightcoral">Step 5: Dynamic Linker Performs Initial Relocations</span>
 
 After **all** the dependencies have been loaded, it begins to perform some initial relocations. For this overview, we are going to assume default behavior and assume that **lazy binding is enabled**, thus only data relocations are performed at this step. What is lazy binding? That'll be explained in detail later, but recall from Part 1 that it is a way to defer symbol resolution until runtime using a part of the GOT and special stubs in a segment known as the PLT.
 
@@ -82,7 +82,7 @@ After it knows the symbol name, it can perform symbol resolution by performing a
 
 For the initial data relocations, the symbol name is only used for the this lookup step. After the relocation is applied, the symbol name is no longer needed.
 
-#### <span style="color:red">Step 6: Dynamic Linker Prepares PLT/GOT for Lazy Binding</span>
+#### <span style="color:lightcoral">Step 6: Dynamic Linker Prepares PLT/GOT for Lazy Binding</span>
 
 Although due to lazy binding, dynamic function symbols will not be resolved until runtime, the dynamic linker still has to set some things up in order for lazy binding to work. Keep in mind, I still haven't explained how lazy binding works in detail, so some of this section may not entirely make sense for now. I'll try to keep it as high level as possible, but it would help to come back and read this overview after I introduce the details of how lazy binding is implemented for a thorough understanding of this step. 
 
@@ -94,7 +94,7 @@ The dynamic linker now sets up a few things in the PLT and the GOT. The first fe
 
 After the reserved GOT entries, including the resolver trampoline, along with the per-function trampolines back into the PLT stubs have been successfully set up, the dynamic linker is now ready to perform lazy binding using the PLT/GOT at runtime.
 
-#### <span style="color:red">Step 7: Transfer Control to Program Entry Point</span>
+#### <span style="color:lightcoral">Step 7: Transfer Control to Program Entry Point</span>
 
 After the PLT/GOT trampolines have been initialized, the dynamic linker does some final initialization calls and environment setup
 
@@ -105,7 +105,7 @@ After the PLT/GOT trampolines have been initialized, the dynamic linker does som
 
 Finally, the control is transferred to the user program's entry point, usually ```_start```. Keep in mind that at this point, no PLT relocations have been applied yet due to lazy binding being enabled
 
-#### <span style="color:red">Step 8: Execute the Program</span>
+#### <span style="color:lightcoral">Step 8: Execute the Program</span>
 Finally, the control eventually enters the user's ```main()``` function to begin code execution. At this point, we can start the process of lazy binding. When the user code makes a call to a shared library function, say ```printf()```, it will now jump to the PLT stub for that function, ```printf@plt```, and eventually enter the dynamic linker's resolver, which will patch the GOT entry with the location of ```printf```, after it performs the symbol resolution steps discussed previously in Step 5.
 
 > If a lot of the PLT/GOT jargon is going over your head at this point, come back to this section after I have described the process of lazy binding
@@ -125,13 +125,13 @@ Furthermore, security critical programs may choose to disable lazy binding to pr
 
 So how is lazy binding implemented? And what is the function of the PLT and GOT? Lets answer those questions now
 
-### <span style="color:red">Procedure Linkage Table</span>
+### <span style="color:lightcoral">Procedure Linkage Table</span>
 The Procedure Linkage Table (PLT) is a special executable segment of ELF binaries that store stubs to external library functions that need to be resolved. Every time a program makes a call to an external library function, such as ```printf``` it is impossible for it to call that function directly, because it doesn't know the runtime address or location of ```printf``` at compile time. Instead, the compiler will generate a PLT entry or stub, such as ```printf@plt``` which will point to an entry in a table known as the Global Offset Table (GOT), which will eventually store the **real** address of printf after it is dynamically resolved. 
 
-### <span style="color:red">Global Offset Table</span>
+### <span style="color:lightcoral">Global Offset Table</span>
 The Global Offset Table (GOT) is a **data** segment. Unlike the PLT, it is nonexecutable. The GOT is split up into two main components, which at link time were denoted by the sections ```.got``` and ```.got.plt```. For lazy binding purposes, we are only concerned about the ```.got.plt```, as this section holds "jump slots" or locations that will be filled in by the dynamic linker resolver with pointers to resolved external function addresses. The other ```.got``` section doesn't hold pointers used by the PLT for lazy binding, it holds global data symbols that need to be resolved. These entries are resolved at startup by the dynamic linker and don't go through the PLT at all.
 
-### <span style="color:red">Initial Lazy Symbol Resolution</span>
+### <span style="color:lightcoral">Initial Lazy Symbol Resolution</span>
 Here is an example of what PLT stubs look like using a disassembler on one of the binaries from the Practical Binary Analysis CTF exercises
 
 ```

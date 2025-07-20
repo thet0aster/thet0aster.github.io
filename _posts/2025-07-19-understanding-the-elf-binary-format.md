@@ -2,7 +2,7 @@
 layout: post
 title: Understanding the ELF Binary Format
 date: 2025-07-19 10:55 -0400
-categories: [Binary Internals]
+categories: [Binary Internals, ELF]
 tags: [elf, binary, executable, linux, linker]
 image:
     path: /assets/img/binary_analysis.jpg
@@ -84,7 +84,7 @@ This 2-byte field specifies the type of the ELF binary. Common values you'll see
 {: .prompt-info}
 
 #### <span style="color:lightcoral">e_machine</span>
-This 2-byte field represents the machine information. For most systems, this will be set to ```EM_X86_64``` (0x3E). 
+This 2-byte field represents the machine information. For AMD64, this will be set to ```EM_X86_64``` (0x3E). 
 #### <span style="color:lightcoral">e_version</span>
 This 4-byte field is currently always set to ```EV_CURRENT```(1)
 #### <span style="color:lightcoral">e_entry</span>
@@ -331,7 +331,7 @@ I'll describe each field in this structure in detail.
 This 4-byte field describes the type of the segment. Since segments are composed of multiple sections, this can also be interpreted as the collective type of all the sections that make up the segment. Common types include:
 - ```PT_LOAD```: Describes a segment to be loaded into memory. Analogous to ```SHT_ALLOC``` for individual sections
 - ```PT_DYNAMIC```: Contains the ```.dynamic``` section in its entirety
-- ```PT_INTERP```: Containts the ```.interp``` section, which holds the string name of the interpreter/dynamic linker used to load the binary.
+- ```PT_INTERP```: Contains the ```.interp``` section, which holds the string name of the interpreter/dynamic linker used to load the binary.
 
 Using ```readelf``` can give you a clear picture of all the program headers and the associated section to segment mappings
 ```

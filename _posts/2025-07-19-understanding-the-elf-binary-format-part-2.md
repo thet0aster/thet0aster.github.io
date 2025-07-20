@@ -183,7 +183,7 @@ You can see the various stubs for the external function calls this program makes
   4004eb:	e9 a0 ff ff ff       	jmpq   400490 <puts@plt-0x10>
 ```
 
-The first ```jmpq``` instruction jumps into the GOT entry (in the ```.got.plt```) for the jump slot associated with this PLT stub. It will do an indirect jump to the associated GOT entry which will resolve to some jump target somewhere Remember, at this point, the dynamic linker has still not resolved the symbol of ```rand()``` into the main executable`s ```.got.plt```. If that's the case, what exactly is at the address ```0x601038``` that the program jumps to? Lets find out
+The first ```jmpq``` instruction jumps into the GOT entry (in the ```.got.plt```) for the jump slot associated with this PLT stub. It will do an indirect jump to the associated GOT entry which will resolve to some jump target somewhere Remember, at this point, the dynamic linker has still not resolved the symbol of ```rand()``` into the main executable's ```.got.plt```. If that's the case, what exactly is at the address ```0x601038``` that the program jumps to? Lets find out
 
 ```
 binary@binary-VirtualBox:~/Desktop/PBA_Official/code/chapter5$ objdump -s --section .got.plt lvl2

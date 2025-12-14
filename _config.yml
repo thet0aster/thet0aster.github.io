@@ -16,7 +16,7 @@ timezone: America/New_York
 
 title: thet0aster # the main title
 
-tagline: Smashing stacks for fun, profit, and flags # it will display as the subtitle
+tagline: Smashing stacks for fun, profit, and flags! # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   reverse engineering, malware analysis, gamedev 

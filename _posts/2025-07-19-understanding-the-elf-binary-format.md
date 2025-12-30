@@ -80,7 +80,7 @@ The final 8 bytes are padding and are currently unused
 #### <span style="color:lightcoral">e_type</span>
 This 2-byte field specifies the type of the ELF binary. Common values you'll see here are **ET_REL** (1), for relocatable object files, **ET_EXEC** (2) for executable files, **ET_DYN** (3) for shared object files or dynamic libraries, and **ET_CORE** (4) for core files.
 
-> Compilers like gcc disable PIE by default, so executable files will have type ET_DYN rather than ET_EXEC, unless you explicitly disable PIE through a compiler flag
+> Compilers like gcc enable PIE by default, so executable files will have type ET_DYN rather than ET_EXEC, unless you explicitly disable PIE through a compiler flag
 {: .prompt-info}
 
 #### <span style="color:lightcoral">e_machine</span>
